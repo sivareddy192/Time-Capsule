@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Time Capsule</title>
+   <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", Arial, sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+    .box {
+        padding: 45px 35px;
+        width: 420px;
+        min-height: 440px;
+        border-radius: 18px;
+        text-align: center;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .box h1 {
+        color: #333;
+        font-size: 26px;
+        margin-bottom: 5px;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #0b0a0a;
+        outline: none;
+        font-size: 15px;
+    }
+
+    textarea {
+        resize: none;
+        height: 160px;
+    }
+
+    input:focus,
+    textarea:focus {
+        box-shadow: 0 0 0 2px rgba(255, 126, 95, 0.2);
+    }
+
+    button {
+        width: 100%;
+        height: 50px;          
+        padding: 0 16px;       
+        border-radius: 12px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    }
+
+
+    button:hover {
+        background-color: green;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    hr {
+        border: none;
+        height: 1px;
+        background: #eee;
+        margin: 6px 0;
+    }
+    </style>
+
+
+
+  </head>
+  <body>
+    <div class="box">
+      <h3>Time Capsule</h3>
+
+      <textarea id="message" placeholder="Enter Your Message"></textarea>
+      <input type="datetime-local" id="date" placeholder="Select unlock date" />
+      <button onclick="createCapsule()">Create Capsule</button>
+
+      <hr />
+
+      <input type="number" id="capsuleId" placeholder="Capsule ID" />
+      <button onclick="openCapsule()">Open Capsule</button>
+
+      <p id="result"></p>
+    </div>
+
+    <script>
+      function createCapsule() {
+        fetch("/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: document.getElementById("message").value,
+            unlockDate: document.getElementById("date").value,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => alert("Capsule ID: " + data.id));
+      }
+
+      function openCapsule() {
+        const id = document.getElementById("capsuleId").value;
+
+        fetch("/open/" + id)
+          .then((res) => res.json())
+          .then((data) => {
+            document.getElementById("result").innerText =
+              data.message || data.status;
+          });
+      }
+    </script>
+  </body>
+</html>
