@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const app = express();
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(__dirname,"index.html"));
 
 const FILE = "data.json";
 
